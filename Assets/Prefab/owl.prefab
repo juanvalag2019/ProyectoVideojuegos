@@ -389,3 +389,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 8
   direction: 1
+  heartSkins:
+  - {fileID: 21300000, guid: 80f1102eb069bb949abdc359ccb36b4a, type: 3}
+  - {fileID: 21300000, guid: 082ce1afb64d2674db1db0d241450453, type: 3}
