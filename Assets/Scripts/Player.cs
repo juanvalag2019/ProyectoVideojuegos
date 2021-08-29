@@ -6,15 +6,20 @@ public class Player : MonoBehaviour
 {
     //define que la variable es privada aunque puede ser editada desde el editor de unity
     [SerializeField] int speed = 5;
-
+    
     [SerializeField] GameObject bullet;
 
+    [SerializeField] GameObject bulletSpecial;
+
     [SerializeField] float fireInterval = 2;
-    float minX, minY, maxX, maxY, tamX, tamY, nextFireAt;
+    float minX, minY, maxX, maxY, tamX, tamY, nextFireAt, movH, movV;
+
+    bool fireType;
 
     // Start is called before the first frame update
     void Start()
     {
+        fireType = true;
         nextFireAt = fireInterval;
         tamX = (GetComponent<SpriteRenderer>()).bounds.size.x;
         tamY = (GetComponent<SpriteRenderer>()).bounds.size.y;
@@ -26,8 +31,8 @@ public class Player : MonoBehaviour
         Vector2 esquinaInfIzq = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
         minX = esquinaInfIzq.x + tamX / 2;
         minY = esquinaInfIzq.y + 5;
-
-
+        
+    
         // Debug.Log(minY);
     }
 
@@ -36,6 +41,7 @@ public class Player : MonoBehaviour
     {
         Movement();
         Fire();
+        ChangeFire();
     }
 
     void Movement()
@@ -52,8 +58,8 @@ public class Player : MonoBehaviour
          if (Input.GetKey(KeyCode.DownArrow))
              transform.Translate(new Vector2(0, -0.1f));*/
 
-        float movH = Input.GetAxis("Horizontal");
-        float movV = Input.GetAxis("Vertical");
+        movH = Input.GetAxis("Horizontal");
+        movV = Input.GetAxis("Vertical");
         transform.Translate(new Vector2(movH * Time.deltaTime * speed, movV * Time.deltaTime * speed));
         // Time.deltaTime --> tiempo de ejecución del ultimo frame (regula el número que le multipliquemos para que solo una parte del número multiplicado sea aplicado en la ejecución de un frame)
 
@@ -64,10 +70,31 @@ public class Player : MonoBehaviour
 
     void Fire()
     {
+
         if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextFireAt)
         {
-            Instantiate(bullet, transform.position - new Vector3(0, tamY / 2, 0), transform.rotation);
+            if(fireType==true){
+                Instantiate(bullet, transform.position - new Vector3(0, tamY / 2, 0), transform.rotation);
+            }
+            else{
+                GameObject bSpe = Instantiate(bulletSpecial, transform.position - new Vector3(0, tamY / 2, 0), transform.rotation);
+                Debug.Log(movH+ "yo soy");
+                if(movH > 0){
+                    bSpe.GetComponent<BulletSpecial>().direction = true;    
+                    bSpe.GetComponent<BulletSpecial>().speed = this.gameObject.GetComponent<Rigidbody>().velocity.x;
+                }
+                else{
+                    bSpe.GetComponent<BulletSpecial>().direction = false;    
+                    bSpe.GetComponent<BulletSpecial>().speed = -this.gameObject.GetComponent<Rigidbody>().velocity.x;
+                }
+            }
             nextFireAt += fireInterval;
+        }
+    }
+
+    void ChangeFire(){
+        if(Input.GetKeyDown(KeyCode.Z)){
+            fireType = !fireType;
         }
     }
 }
