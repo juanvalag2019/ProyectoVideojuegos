@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     //define que la variable es privada aunque puede ser editada desde el editor de unity
     [SerializeField] int speed = 5;
-    
+
     [SerializeField] GameObject bullet;
 
     [SerializeField] GameObject bulletSpecial;
@@ -31,8 +31,8 @@ public class Player : MonoBehaviour
         Vector2 esquinaInfIzq = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
         minX = esquinaInfIzq.x + tamX / 2;
         minY = esquinaInfIzq.y + 5;
-        
-    
+
+
         // Debug.Log(minY);
     }
 
@@ -73,27 +73,30 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextFireAt)
         {
-            if(fireType==true){
+            if (fireType == true)
+            {
                 Instantiate(bullet, transform.position - new Vector3(0, tamY / 2, 0), transform.rotation);
             }
-            else{
+            else
+            {
                 GameObject bSpe = Instantiate(bulletSpecial, transform.position - new Vector3(0, tamY / 2, 0), transform.rotation);
-                Debug.Log(movH+ "yo soy");
-                if(movH > 0){
-                    bSpe.GetComponent<BulletSpecial>().direction = true;    
-                    bSpe.GetComponent<BulletSpecial>().speed = this.gameObject.GetComponent<Rigidbody>().velocity.x;
+                if (movH > 0)
+                {
+                    bSpe.GetComponent<BulletSpecial>().direction = true;
                 }
-                else{
-                    bSpe.GetComponent<BulletSpecial>().direction = false;    
-                    bSpe.GetComponent<BulletSpecial>().speed = -this.gameObject.GetComponent<Rigidbody>().velocity.x;
+                else
+                {
+                    bSpe.GetComponent<BulletSpecial>().direction = false;
                 }
             }
             nextFireAt += fireInterval;
         }
     }
 
-    void ChangeFire(){
-        if(Input.GetKeyDown(KeyCode.Z)){
+    void ChangeFire()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
             fireType = !fireType;
         }
     }
